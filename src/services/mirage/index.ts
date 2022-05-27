@@ -1,4 +1,4 @@
-import { createServer, Factory, Model, Response } from 'miragejs'
+import { createServer, Factory, Model, Response, ActiveModelSerializer } from 'miragejs'
 import faker from 'faker'
 type User = { 
   name: string;  //defino como se fosse colunas do meu db do mirage
@@ -8,6 +8,11 @@ type User = {
 
 export function makeServer() {
   const server = createServer({
+    serializers: {
+      application: ActiveModelSerializer,
+    },
+
+
     models: {  //aqui diz qual tipo de dados vamos ter dentro do mirage
       user: Model.extend<Partial<User>>({}) //pode existir momentos que ue vá usar o User, sem informar todos os campos, então uso o Partial
     },
@@ -51,6 +56,9 @@ export function makeServer() {
           { users }
         )
       }); // é um shorthand do mirage, ele vai entender automaticamente que quando chamarmos a rota /users, ele deve retornar a lista completa de usuários
+
+      this.get('/users/:id'); // shorthand que cria rota listando os usuários pelo id
+
       this.post('/users'); //outro shortahand, vai criar a estrutura necessária para criarmos um novo usuário (devemos passar name, email, created_at)
 
       this.namespace = '' // Por padrão o Next tbm aceita que criamos na pasta pages a pasta api, que dentro dela teremos algumas rotas de api, o caminho delas também é api. Então temos 2 alternativas, ou trocamos o namespace das rotas do mirage, ou resetamos o namespace aqui no final para em branco '', ou seja, ele vai utilizar o namespace lá de cima, mas depois que ele terminar de definir as rotas do mirage (get e post ali de cima), ele volta ao nome original '', para não prejudicar as rotas de api que temos dentro do próprio Next.
