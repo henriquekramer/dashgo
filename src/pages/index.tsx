@@ -3,6 +3,8 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Input } from '../components/Form/Input'
+import { useContext, useState } from 'react'
+import { AuthContext } from '../contexts/AuthContext'
 
 type SignInFormData = {
   email: string;
@@ -14,14 +16,29 @@ const signInFormSchema = yup.object().shape({
   password:yup.string().required('Senha obrigatória')
 })
 
-export default function SignIn() {
+export default function Home() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const { signIn } = useContext(AuthContext)
+
+  async function handleSubmitForm() {
+
+    const data = {
+      email,
+      password,
+    }
+
+    await signIn(data)
+  }
+  
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(signInFormSchema)
   }) 
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    console.log(values)
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    handleSubmitForm()
   }
 
   const { errors } = formState
@@ -50,6 +67,8 @@ export default function SignIn() {
             label="E-mail"
             error={errors.email}
             {...register('email')}
+            value={email}
+            onChange={e => setEmail(e.target.value)}
           />
           <Input
             name="password"
@@ -57,6 +76,8 @@ export default function SignIn() {
             label="Senha"
             error={errors.password}
             {...register('password')}
+            value={password}
+            onChange={e => setPassword(e.target.value)}
           />
         </Stack>
 
