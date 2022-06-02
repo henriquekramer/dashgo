@@ -39,7 +39,7 @@ export function makeServer() {
     routes() {
       this.namespace = 'api'  // setamos o caminho que nosso app terá que acessar para conseguir chamar as rotas do mirage. Todas as rotas agr vao chamar /api/.. Ex: /api/users
 
-      this.timing = 750; // toda chamada que faço para a API do mirage, demore 750ms, importante para testar os carregamentos, spinners, loadings etc
+      this.timing = 400; // toda chamada que faço para a API do mirage, demore 750ms, importante para testar os carregamentos, spinners, loadings etc
 
       this.get('/users', function(schema, request){
         const { page= 1, per_page = 10} = request.queryParams
@@ -66,6 +66,7 @@ export function makeServer() {
       this.passthrough() // vai fazer com que todas as chamdas enviadas p/ o endereço api passem pelo mirage e senão forem detectadsa pelas rotas do mirage, elas passem adiante para suas rotas originais
 
       this.passthrough('http://localhost:3333/**'); // Ignora todas as rotas de localhost:3333 que não existem no mirage
+      
     }
   })
 
