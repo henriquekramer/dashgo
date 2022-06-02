@@ -63,7 +63,9 @@ export function makeServer() {
 
       this.namespace = '' // Por padrão o Next tbm aceita que criamos na pasta pages a pasta api, que dentro dela teremos algumas rotas de api, o caminho delas também é api. Então temos 2 alternativas, ou trocamos o namespace das rotas do mirage, ou resetamos o namespace aqui no final para em branco '', ou seja, ele vai utilizar o namespace lá de cima, mas depois que ele terminar de definir as rotas do mirage (get e post ali de cima), ele volta ao nome original '', para não prejudicar as rotas de api que temos dentro do próprio Next.
 
-      this.passthrough() // vai fazer com que todas as chamdas enviadas p/ o endereço api, passem pelo mirage e senão forem detectadsa pelas rotas do mirage, elas passem adiante para suas rotas originais
+      this.passthrough() // vai fazer com que todas as chamdas enviadas p/ o endereço api passem pelo mirage e senão forem detectadsa pelas rotas do mirage, elas passem adiante para suas rotas originais
+
+      this.passthrough('http://localhost:3333/**'); // Ignora todas as rotas de localhost:3333 que não existem no mirage
     }
   })
 
