@@ -22,9 +22,9 @@ export function SidebarNav() {
         bg="gray.700"
         _hover={{bg:'gray.500'}}
         onClick={signOut}
-        >
-          Logout
-        </Button>
+      >
+        Logout
+      </Button>
     </Stack>
   );
 }

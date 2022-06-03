@@ -9,6 +9,8 @@ import { useContext, useEffect } from "react";
 import { newApi } from "../services/apiClient";
 import { AuthContext } from "../contexts/AuthContext";
 import { setupAPIClient } from "../services/api";
+import { useCan } from "../services/hooks/useCan";
+import { Can } from "../components/Can";
 
 const Chart = dynamic(()=> import('react-apexcharts'), { ssr: false})
 
@@ -81,28 +83,29 @@ export default function Dashboard() {
       <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
         <Sidebar />
 
-        <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start">
-          <Box
-            p={["6", "8"]}
-            bg="gray.800"
-            borderRadius={8}
-            pb="4"
-          >
-            <Text fontSize="lg" mb="4">Inscritos da semana</Text>
-            <Chart options={options} series={series} type="area" height={160} />
-          </Box>
-          <Box
-            p={["6", "8"]}
-            bg="gray.800"
-            borderRadius={8}
-            pb="4"
-          >
-            <Text fontSize="lg" mb="4">Taxa de abertura</Text>
-            <Chart options={options} series={series} type="area" height={160} />
-
-          </Box>
-          
-        </SimpleGrid>
+          <Can>
+            <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start">
+              <Box
+                p={["6", "8"]}
+                bg="gray.800"
+                borderRadius={8}
+                pb="4"
+              >
+                <Text fontSize="lg" mb="4">Inscritos da semana</Text>
+                <Chart options={options} series={series} type="area" height={160} />
+              </Box>
+              <Box
+                p={["6", "8"]}
+                bg="gray.800"
+                borderRadius={8}
+                pb="4"
+              >
+                <Text fontSize="lg" mb="4">Taxa de abertura</Text>
+                <Chart options={options} series={series} type="area" height={160} />
+              </Box>
+            </SimpleGrid>
+          </Can>
+        
       </Flex>
     </Flex>
   )
@@ -112,9 +115,10 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
   const apiClient= setupAPIClient(ctx)
   const response = await apiClient.get('/me')
 
-  console.log(response.data)
-
   return {
     props: {}
   }
+}, {
+  permissions: ['metrics.list'],
+  roles: ['administrator'],
 })

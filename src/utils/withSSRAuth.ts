@@ -1,16 +1,44 @@
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import { destroyCookie, parseCookies } from "nookies"
 import { AuthTokenError } from "../services/errors/AuthTokenErrors"
+import decode from 'jwt-decode'
+import { validateUserPermissions } from "./validateUserPermissions"
 
-export function withSSRAuth<P>(fn: GetServerSideProps<P>){
+type WithSSRAuthOptions = {
+  permissions?: string[];
+  roles?: string[];
+}
+
+export function withSSRAuth<P>(fn: GetServerSideProps<P>, options?: WithSSRAuthOptions){
   return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
     const cookies = parseCookies(ctx) 
+    const token = cookies['dashgo.token']
 
-    if(!cookies['dashgo.token']){
+    if(!token){
       return {
         redirect: {
           destination: '/',
           permanent: false
+        }
+      }
+    }
+
+    if(options){
+      const user = decode<{ permissions: string[], roles: string[]}>(token)
+      const {permissions, roles } = options
+      
+      const userHasValidPermissions = validateUserPermissions({
+        user,
+        permissions, 
+        roles
+      })
+
+      if(!userHasValidPermissions){
+        return {
+          redirect: {
+            destination: '/dashboard',
+            permanent: false
+          }
         }
       }
     }
@@ -23,11 +51,11 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>){
         destroyCookie(ctx, 'dashgo.refreshToken')
   
         return {
-        redirect: {
-          destination: '/',
-          permanent: false
+          redirect: {
+            destination: '/',
+            permanent: false
+          }
         }
-      }
       }
     }
   }
