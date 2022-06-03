@@ -10,13 +10,12 @@ import { Sidebar } from "../../components/Sidebar";
 import { api } from "../../services/api";
 import { getUsers, useUsers } from "../../services/hooks/useUsers";
 import { queryClient } from "../../services/queryClient";
+import { withSSRAuth } from "../../utils/withSSRAuth";
 
 
 export default function UserList() {
   const [page, setPage] = useState(1)
   const { data, isLoading, isFetching, error } = useUsers(page)
-
-  console.log(page)
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -114,4 +113,9 @@ export default function UserList() {
   )
 }
 
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+  return {
+    props: {}
+  }
+})
 

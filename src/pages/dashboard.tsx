@@ -4,9 +4,7 @@ import { Header } from "../components/Header";
 
 import { ApexOptions } from "apexcharts";
 import { Sidebar } from "../components/Sidebar";
-import { useContext, useEffect } from "react";
-import { AuthContext } from "../contexts/AuthContext";
-import { newApi } from "../services/api";
+import { withSSRAuth } from "../utils/withSSRAuth";
 
 const Chart = dynamic(()=> import('react-apexcharts'), { ssr: false})
 
@@ -63,15 +61,7 @@ const series = [
 ]
 
 export default function Dashboard() {
-  const { user } = useContext(AuthContext)
-
-  useEffect(()=> {
-    newApi.get('/me')
-      .then(response => console.log(response))
-      .catch(err => console.log(err))
-  }, [])
-
-  
+ 
   return (
     <Flex direction="column" h="100vh">
       <Header/>
@@ -105,3 +95,9 @@ export default function Dashboard() {
     </Flex>
   )
 }
+
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+  return {
+    props: {}
+  }
+})
