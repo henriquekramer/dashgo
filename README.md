@@ -15,7 +15,7 @@
 
 ## 💻 Projeto
 
-<p align="justify">O Dashgo é um dashboard de administração, nele é possível construir gráficos, criar usuários e fazer automações. 
+<p align="justify">O Dashgo é um dashboard de administração, nele é possível construir gráficos (ApexCharts), criar usuários e fazer automações. 
   O projeto foi construído com ChakraUI, utiliza do Mirage JS para criar uma fake API para criar uma lista de usuários, acessa uma API externa para fazer validação
   e autenticação de usuários.Além disso, está totalmente responsivo. Ele é um projeto desenvolvido na Rocketseat em seu curso Ignite de React.
 </p>
@@ -41,6 +41,7 @@ As seguintes tecnologias foram utilizadas no projeto:
 - [React Hook Form](https://react-hook-form.com/)
 - [Next.js](https://nextjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
+- [ApexCharts](https://apexcharts.com/)
 
 
 ## 💻 Instalação e Uso
